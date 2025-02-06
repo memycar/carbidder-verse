@@ -15,18 +15,24 @@ export type Database = {
           created_at: string | null
           id: string
           listing_id: string | null
+          updated_at: string | null
+          user_id: string | null
         }
         Insert: {
           amount: number
           created_at?: string | null
           id?: string
           listing_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
         }
         Update: {
           amount?: number
           created_at?: string | null
           id?: string
           listing_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
         }
         Relationships: [
           {
@@ -34,6 +40,13 @@ export type Database = {
             columns: ["listing_id"]
             isOneToOne: false
             referencedRelation: "listings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bids_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -80,10 +93,12 @@ export type Database = {
           make: Database["public"]["Enums"]["car_make"]
           mileage: number
           model: string
+          owner_id: string | null
           reserve_price: number | null
           starting_price: number
           status: string
           title: string
+          updated_at: string | null
           views: number | null
           year: number
         }
@@ -96,10 +111,12 @@ export type Database = {
           make: Database["public"]["Enums"]["car_make"]
           mileage: number
           model: string
+          owner_id?: string | null
           reserve_price?: number | null
           starting_price: number
           status?: string
           title: string
+          updated_at?: string | null
           views?: number | null
           year: number
         }
@@ -112,14 +129,24 @@ export type Database = {
           make?: Database["public"]["Enums"]["car_make"]
           mileage?: number
           model?: string
+          owner_id?: string | null
           reserve_price?: number | null
           starting_price?: number
           status?: string
           title?: string
+          updated_at?: string | null
           views?: number | null
           year?: number
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "listings_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       memycar: {
         Row: {
@@ -133,6 +160,33 @@ export type Database = {
         Update: {
           created_at?: string
           id?: number
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string | null
+          full_name: string | null
+          id: string
+          updated_at: string | null
+          username: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string | null
+          full_name?: string | null
+          id: string
+          updated_at?: string | null
+          username?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string | null
+          full_name?: string | null
+          id?: string
+          updated_at?: string | null
+          username?: string | null
         }
         Relationships: []
       }
