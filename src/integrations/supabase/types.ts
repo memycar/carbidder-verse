@@ -9,7 +9,118 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      bids: {
+        Row: {
+          amount: number
+          created_at: string | null
+          id: string
+          listing_id: string | null
+        }
+        Insert: {
+          amount: number
+          created_at?: string | null
+          id?: string
+          listing_id?: string | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string | null
+          id?: string
+          listing_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bids_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "listings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      listing_images: {
+        Row: {
+          created_at: string | null
+          display_order: number
+          id: string
+          image_url: string
+          listing_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          display_order: number
+          id?: string
+          image_url: string
+          listing_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          display_order?: number
+          id?: string
+          image_url?: string
+          listing_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "listing_images_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "listings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      listings: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          end_time: string
+          id: string
+          main_image: string
+          make: Database["public"]["Enums"]["car_make"]
+          mileage: number
+          model: string
+          reserve_price: number | null
+          starting_price: number
+          status: string
+          title: string
+          views: number | null
+          year: number
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          end_time: string
+          id?: string
+          main_image: string
+          make: Database["public"]["Enums"]["car_make"]
+          mileage: number
+          model: string
+          reserve_price?: number | null
+          starting_price: number
+          status?: string
+          title: string
+          views?: number | null
+          year: number
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          end_time?: string
+          id?: string
+          main_image?: string
+          make?: Database["public"]["Enums"]["car_make"]
+          mileage?: number
+          model?: string
+          reserve_price?: number | null
+          starting_price?: number
+          status?: string
+          title?: string
+          views?: number | null
+          year?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -18,7 +129,50 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      car_make:
+        | "Acura"
+        | "Alfa Romeo"
+        | "Aston Martin"
+        | "Audi"
+        | "Bentley"
+        | "BMW"
+        | "Bugatti"
+        | "Buick"
+        | "Cadillac"
+        | "Chevrolet"
+        | "Chrysler"
+        | "Dodge"
+        | "Ferrari"
+        | "Fiat"
+        | "Ford"
+        | "Genesis"
+        | "GMC"
+        | "Honda"
+        | "Hyundai"
+        | "Infiniti"
+        | "Jaguar"
+        | "Jeep"
+        | "Kia"
+        | "Lamborghini"
+        | "Land Rover"
+        | "Lexus"
+        | "Lincoln"
+        | "Lotus"
+        | "Maserati"
+        | "Mazda"
+        | "McLaren"
+        | "Mercedes-Benz"
+        | "MINI"
+        | "Mitsubishi"
+        | "Nissan"
+        | "Porsche"
+        | "Ram"
+        | "Rolls-Royce"
+        | "Subaru"
+        | "Tesla"
+        | "Toyota"
+        | "Volkswagen"
+        | "Volvo"
     }
     CompositeTypes: {
       [_ in never]: never

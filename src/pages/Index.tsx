@@ -4,40 +4,33 @@ import { motion } from "framer-motion";
 import { Navigation } from "@/components/Navigation";
 import { FeaturedAuctionCard } from "@/components/FeaturedAuctionCard";
 import { Button } from "@/components/ui/button";
-
-// Temporary mock data
-const featuredAuctions = [
-  {
-    id: 1,
-    image: "https://source.unsplash.com/random/800x600/?luxury,car",
-    title: "2021 Porsche 911 GT3",
-    price: 175000,
-    timeLeft: "2 days left",
-  },
-  {
-    id: 2,
-    image: "https://source.unsplash.com/random/800x600/?sports,car",
-    title: "2020 Ferrari F8 Tributo",
-    price: 285000,
-    timeLeft: "3 days left",
-  },
-  {
-    id: 3,
-    image: "https://source.unsplash.com/random/800x600/?classic,car",
-    title: "1967 Ford Mustang Fastback",
-    price: 85000,
-    timeLeft: "1 day left",
-  },
-];
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import type { Listing } from "@/types/listings";
 
 const Index = () => {
+  const { data: listings, isLoading } = useQuery({
+    queryKey: ['featuredListings'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('listings')
+        .select('*')
+        .eq('status', 'active')
+        .order('end_time', { ascending: true })
+        .limit(6);
+
+      if (error) throw error;
+      return data as Listing[];
+    },
+  });
+
   useEffect(() => {
     // Preload images for smooth transitions
-    featuredAuctions.forEach((auction) => {
+    listings?.forEach((listing) => {
       const img = new Image();
-      img.src = auction.image;
+      img.src = listing.main_image;
     });
-  }, []);
+  }, [listings]);
 
   return (
     <div className="min-h-screen bg-muted">
@@ -82,11 +75,23 @@ const Index = () => {
               View All
             </Button>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {featuredAuctions.map((auction, index) => (
-              <FeaturedAuctionCard key={auction.id} {...auction} index={index} />
-            ))}
-          </div>
+          {isLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="h-[400px] rounded-lg bg-gray-100 animate-pulse" />
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {listings?.map((listing, index) => (
+                <FeaturedAuctionCard 
+                  key={listing.id} 
+                  listing={listing} 
+                  index={index} 
+                />
+              ))}
+            </div>
+          )}
         </div>
       </section>
     </div>
